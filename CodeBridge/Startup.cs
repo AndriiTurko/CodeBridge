@@ -1,11 +1,11 @@
-﻿using AspNetCoreRateLimit;
-using CodeBridge.BLL.Interfaces;
+﻿using CodeBridge.BLL.Interfaces;
 using CodeBridge.BLL.Services;
 using CodeBridge.DAL;
-using CodeBridge.DAL.Infrastructure;
 using CodeBridge.DAL.Interfaces;
-using CodeBridge.Middleware;
+using CodeBridge.DbContexts;
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using CodeBridge.BLL.MappingProfiles;
 
 namespace CodeBridge
 {
@@ -22,22 +22,33 @@ namespace CodeBridge
         {
             var connectionString = Configuration.GetConnectionString("Database");
 
-            services.AddDbContext<CodeBridgeContext>(options =>
-                options.UseSqlServer(connectionString, providerOptions =>
-                    providerOptions.EnableRetryOnFailure()
-                    ));
+            //services.AddDbContext<CodeBridgeContext>(options =>
+            //    options.UseSqlServer(connectionString, providerOptions =>
+            //        providerOptions.EnableRetryOnFailure()
+            //        ));
+
+            services.AddDbContext<CodeBridgeContext>(options => 
+                options.UseSqlite(connectionString)); 
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
-            services.Configure<IpRateLimitOptions>(Configuration.GetSection("IpRateLimiting"));
-            services.AddSingleton<IIpPolicyStore, MemoryCacheIpPolicyStore>();
-            services.AddSingleton<IRateLimitCounterStore, MemoryCacheRateLimitCounterStore>();
-            services.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>();
+            //services.Configure<IpRateLimitOptions>(Configuration.GetSection("IpRateLimiting"));
+            //services.AddSingleton<IIpPolicyStore, MemoryCacheIpPolicyStore>();
+            //services.AddSingleton<IRateLimitCounterStore, MemoryCacheRateLimitCounterStore>();
+            //services.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>();
+
+            //var mappingConfiguration = new MapperConfiguration(mc => mc.AddProfile(new DogProfile()));
+            //
+            //IMapper mapper = mappingConfiguration.CreateMapper();
+            //
+            //services.AddSingleton(mapper);
+
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IDogService, DogService>();
 
-            services.AddControllers();
+            services.AddControllers().AddNewtonsoftJson();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -51,17 +62,14 @@ namespace CodeBridge
                 app.UseHsts();
             }
 
-            app.ConfigureExceptionMiddleware();
+            app.UseExceptionHandler("/exception");
 
-            app.UseIpRateLimiting();
+            //app.UseIpRateLimiting();
 
             app.UseHttpsRedirection();
 
-            app.UseDefaultFiles();
-            app.UseStaticFiles();
-
             app.UseRouting();
-
+            
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();

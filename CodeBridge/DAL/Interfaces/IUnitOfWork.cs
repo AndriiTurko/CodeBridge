@@ -1,4 +1,4 @@
-﻿using CodeBridge.Models;
+﻿using CodeBridge.Entities;
 
 namespace CodeBridge.DAL.Interfaces
 {
@@ -6,6 +6,6 @@ namespace CodeBridge.DAL.Interfaces
     {
         IRepository<Dog> Dogs { get; }
 
-        Task<int> SaveChangesAsync();
+        Task<bool> SaveChangesAsync();
     }
 }

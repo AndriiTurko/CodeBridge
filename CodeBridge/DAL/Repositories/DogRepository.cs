@@ -1,6 +1,6 @@
-﻿using CodeBridge.DAL.Infrastructure;
-using CodeBridge.DAL.Interfaces;
-using CodeBridge.Models;
+﻿using CodeBridge.DAL.Interfaces;
+using CodeBridge.DbContexts;
+using CodeBridge.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace CodeBridge.DAL.Repositories
@@ -21,9 +21,9 @@ namespace CodeBridge.DAL.Repositories
             return createdItem != null;
         }
 
-        public DbSet<Dog> GetAllRaw()
+        public async Task<IEnumerable<Dog>> GetAllAsync()
         {
-            return _context.Dogs;
+            return await _context.Dogs.ToListAsync();
         }
     }
 }

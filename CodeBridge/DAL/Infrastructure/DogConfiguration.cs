@@ -1,4 +1,5 @@
-﻿using CodeBridge.Models;
+﻿using CodeBridge.DbContexts;
+using CodeBridge.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -12,7 +13,7 @@ namespace CodeBridge.DAL.Infrastructure
 
             builder.Property(data => data.Name);
             builder.Property(data => data.Color);
-            builder.Property(data => data.Tail_length);
+            builder.Property(data => data.TailLength);
             builder.Property(data => data.Weight);
         }
     }

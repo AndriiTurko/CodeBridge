@@ -7,8 +7,8 @@ namespace CodeBridge.BLL.Interfaces
     {
         public Task<string> PingAsync();
 
-        public Task<List<Dog>> GetDogsAsync(string attribute, string order, int pageNumber, int limit);
+        public Task<IEnumerable<DogDTO>> GetDogsAsync(string attribute, string order, int pageNumber, int limit);
 
-        public Task<bool> PostDog(Dog dogRequest);
+        public Task<bool> PostDog(DogForCreationDTO dogForCreationDTO);
     }
 }

@@ -1,36 +1,45 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Runtime.Serialization;
 
-namespace CodeBridge.Models
+namespace CodeBridge.Entities
 {
     [DataContract]
     public class Dog : IEquatable<Dog>
     {
-        [Key, DataMember(Name = "id", EmitDefaultValue = false)]
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [DataMember(Name = "id", EmitDefaultValue = false)]
         public Guid Id { get; set; }
 
+        [Required]
         [DataMember(Name = "name", EmitDefaultValue = false)]
         public string Name { get; set; }
 
         [DataMember(Name = "color", EmitDefaultValue = false)]
-        public string Color { get; set; }
+        public string? Color { get; set; }
 
         [DataMember(Name = "tail_length", EmitDefaultValue = false)]
-        public int Tail_length { get; set; }
+        public int TailLength { get; set; }
 
         [DataMember(Name = "weight", EmitDefaultValue = false)]
         public int Weight { get; set; }
+
+        public Dog(string name)
+        {
+            Name = name;
+        }
 
         public bool Equals(Dog? other)
         {
             if (other == null)
                 return false;
 
-            return this.Name == other.Name
-                && this.Color == other.Color
-                && this.Tail_length == other.Tail_length
-                && this.Weight == other.Weight;
+            return Name == other.Name
+                && Color == other.Color
+                && TailLength == other.TailLength
+                && Weight == other.Weight;
         }
 
         public override bool Equals(object? obj)

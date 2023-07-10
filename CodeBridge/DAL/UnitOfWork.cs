@@ -1,7 +1,7 @@
-﻿using CodeBridge.DAL.Infrastructure;
-using CodeBridge.DAL.Interfaces;
+﻿using CodeBridge.DAL.Interfaces;
 using CodeBridge.DAL.Repositories;
-using CodeBridge.Models;
+using CodeBridge.DbContexts;
+using CodeBridge.Entities;
 
 namespace CodeBridge.DAL
 {
@@ -46,9 +46,9 @@ namespace CodeBridge.DAL
             GC.SuppressFinalize(this);
         }
 
-        public async Task<int> SaveChangesAsync()
+        public async Task<bool> SaveChangesAsync()
         {
-            return await _context.SaveChangesAsync();
+            return (await _context.SaveChangesAsync()) >= 0;
         }
     }
 }
